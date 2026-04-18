@@ -41,7 +41,7 @@ app.get('/api/chores', (req, res) => {
 });
 
 app.post('/api/chores', (req, res) => {
-  const { title, assigneeId, startDate, recurrence, endDate } = req.body;
+  const { title, assigneeId, startDate, startTime, endTime, recurrence, endDate } = req.body;
   if (!title || !startDate) return res.status(400).json({ error: 'title and startDate required' });
   const db = read();
   const chore = {
@@ -49,6 +49,8 @@ app.post('/api/chores', (req, res) => {
     title,
     assigneeId: assigneeId || null,
     startDate,
+    startTime: startTime || null,
+    endTime: endTime || null,
     recurrence: recurrence || { type: 'none' },
     endDate: endDate || null,
   };
