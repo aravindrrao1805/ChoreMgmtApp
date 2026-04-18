@@ -1,12 +1,22 @@
 import { useState } from 'react';
+import { getDay, parseISO } from 'date-fns';
 import RecurrenceFields from './RecurrenceFields';
 
-function defaultState(chore, prefillDate) {
+function defaultEndTime(startTime) {
+  if (!startTime) return '';
+  const [h, m] = startTime.split(':').map(Number);
+  const endH = h + 1;
+  return `${String(endH < 24 ? endH : 23).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+}
+
+function defaultState(chore, prefillDate, prefillTime) {
   if (chore) {
     return {
       title: chore.title,
       assigneeId: chore.assigneeId || '',
       startDate: chore.startDate,
+      startTime: chore.startTime || '',
+      endTime: chore.endTime || '',
       endDate: chore.endDate || '',
       recurrence: chore.recurrence || { type: 'none' },
     };
@@ -15,13 +25,15 @@ function defaultState(chore, prefillDate) {
     title: '',
     assigneeId: '',
     startDate: prefillDate || '',
+    startTime: prefillTime || '',
+    endTime: defaultEndTime(prefillTime),
     endDate: '',
     recurrence: { type: 'none' },
   };
 }
 
-export default function ChoreForm({ chore, prefillDate, members, onSubmit, onDelete, onClose }) {
-  const [form, setForm] = useState(() => defaultState(chore, prefillDate));
+export default function ChoreForm({ chore, prefillDate, prefillTime, members, onSubmit, onDelete, onClose }) {
+  const [form, setForm] = useState(() => defaultState(chore, prefillDate, prefillTime));
 
   function set(key, val) {
     setForm((f) => ({ ...f, [key]: val }));
@@ -34,6 +46,8 @@ export default function ChoreForm({ chore, prefillDate, members, onSubmit, onDel
       title: form.title.trim(),
       assigneeId: form.assigneeId || null,
       startDate: form.startDate,
+      startTime: form.startTime || null,
+      endTime: form.endTime || null,
       endDate: form.endDate || null,
       recurrence: form.recurrence,
     });
@@ -41,13 +55,30 @@ export default function ChoreForm({ chore, prefillDate, members, onSubmit, onDel
 
   function handleRecurrenceTypeChange(e) {
     const t = e.target.value;
+    // Default weekly days to the startDate's day-of-week so the event
+    // recurs on the same day the user clicked, not always Monday.
+    const defaultDay = form.startDate
+      ? getDay(parseISO(form.startDate + 'T00:00:00'))
+      : 1;
     const defaults = {
       none: { type: 'none' },
-      weekly: { type: 'weekly', days: [1] },
+      weekly: { type: 'weekly', days: [defaultDay] },
       monthly: { type: 'monthly', dayOfMonth: 1 },
       custom: { type: 'custom', interval: 1, unit: 'weeks' },
     };
     set('recurrence', defaults[t]);
+  }
+
+  function handleStartTimeChange(e) {
+    const val = e.target.value;
+    setForm((f) => {
+      const autoEnd = defaultEndTime(val);
+      return {
+        ...f,
+        startTime: val,
+        endTime: (!f.endTime || f.endTime <= val) ? autoEnd : f.endTime,
+      };
+    });
   }
 
   return (
@@ -90,6 +121,25 @@ export default function ChoreForm({ chore, prefillDate, members, onSubmit, onDel
             type="date"
             value={form.endDate}
             onChange={(e) => set('endDate', e.target.value)}
+          />
+        </div>
+      </div>
+
+      <div className="field-row">
+        <div className="field">
+          <label>Start time</label>
+          <input
+            type="time"
+            value={form.startTime}
+            onChange={handleStartTimeChange}
+          />
+        </div>
+        <div className="field">
+          <label>End time</label>
+          <input
+            type="time"
+            value={form.endTime}
+            onChange={(e) => set('endTime', e.target.value)}
           />
         </div>
       </div>

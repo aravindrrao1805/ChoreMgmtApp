@@ -2,7 +2,7 @@ import ChoreForm from './ChoreForm';
 
 export default function ChoreModal({ modalState, members, onSave, onDelete, onClose }) {
   if (!modalState.open) return null;
-  const { chore, prefillDate } = modalState;
+  const { chore, prefillDate, prefillTime } = modalState;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -14,6 +14,7 @@ export default function ChoreModal({ modalState, members, onSave, onDelete, onCl
         <ChoreForm
           chore={chore}
           prefillDate={prefillDate}
+          prefillTime={prefillTime}
           members={members}
           onSubmit={onSave}
           onDelete={onDelete}

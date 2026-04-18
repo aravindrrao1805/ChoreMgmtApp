@@ -15,13 +15,27 @@ function inRange(d, start, end) {
 
 function makeEvent(chore, date, members) {
   const start = new Date(date);
-  start.setHours(0, 0, 0, 0);
   const end = new Date(date);
-  end.setHours(23, 59, 59, 999);
+
+  if (chore.startTime) {
+    const [sh, sm] = chore.startTime.split(':').map(Number);
+    start.setHours(sh, sm, 0, 0);
+    if (chore.endTime) {
+      const [eh, em] = chore.endTime.split(':').map(Number);
+      end.setHours(eh, em, 0, 0);
+    } else {
+      end.setHours(sh + 1 < 24 ? sh + 1 : 23, sm, 0, 0);
+    }
+  } else {
+    start.setHours(0, 0, 0, 0);
+    end.setHours(23, 59, 59, 999);
+  }
+
   return {
     title: chore.title,
     start,
     end,
+    allDay: !chore.startTime,
     resource: {
       choreId: chore.id,
       chore,

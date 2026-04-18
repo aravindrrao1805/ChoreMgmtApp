@@ -7,19 +7,19 @@ import ChoreModal from './components/ChoreModal/ChoreModal';
 import MemberPanel from './components/Members/MemberPanel';
 import './index.css';
 
-const CLOSED_MODAL = { open: false, chore: null, prefillDate: '' };
+const CLOSED_MODAL = { open: false, chore: null, prefillDate: '', prefillTime: '' };
 
 export default function App() {
   const { members, addMember, removeMember } = useMembers();
   const { chores, addChore, updateChore, removeChore } = useChores();
   const [modalState, setModalState] = useState(CLOSED_MODAL);
 
-  const openCreate = useCallback((prefillDate = '') => {
-    setModalState({ open: true, chore: null, prefillDate });
+  const openCreate = useCallback((prefillDate = '', prefillTime = '') => {
+    setModalState({ open: true, chore: null, prefillDate, prefillTime });
   }, []);
 
   const openEdit = useCallback((chore) => {
-    setModalState({ open: true, chore, prefillDate: '' });
+    setModalState({ open: true, chore, prefillDate: '', prefillTime: '' });
   }, []);
 
   const closeModal = useCallback(() => setModalState(CLOSED_MODAL), []);
@@ -38,9 +38,14 @@ export default function App() {
     closeModal();
   }, [removeChore, closeModal]);
 
-  // react-big-calendar slot click gives a { start } object
   const handleSelectSlot = useCallback(({ start }) => {
-    openCreate(format(start, 'yyyy-MM-dd'));
+    const date = format(start, 'yyyy-MM-dd');
+    const h = start.getHours();
+    const m = start.getMinutes();
+    const time = (h !== 0 || m !== 0)
+      ? `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+      : '';
+    openCreate(date, time);
   }, [openCreate]);
 
   const handleSelectEvent = useCallback((event) => {
