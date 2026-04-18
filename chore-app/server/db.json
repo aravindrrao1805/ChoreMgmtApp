@@ -1,0 +1,53 @@
+{
+  "members": [
+    {
+      "id": "988b91ba-f738-450c-ac26-38d7ceeab84e",
+      "name": "Char 1"
+    },
+    {
+      "id": "e75d795e-fe9a-4f89-9db0-099d8a46e90e",
+      "name": "Char 2"
+    }
+  ],
+  "chores": [
+    {
+      "id": "13987b40-755f-4925-aad5-7bc29370712b",
+      "title": "Clean Desks",
+      "assigneeId": "988b91ba-f738-450c-ac26-38d7ceeab84e",
+      "startDate": "2026-04-15",
+      "recurrence": {
+        "type": "weekly",
+        "days": [
+          1
+        ]
+      },
+      "endDate": null
+    },
+    {
+      "id": "697931df-63a8-4f33-b61b-c50d0fbfa01e",
+      "title": "water plants",
+      "assigneeId": "e75d795e-fe9a-4f89-9db0-099d8a46e90e",
+      "startDate": "2026-04-22",
+      "recurrence": {
+        "type": "weekly",
+        "days": [
+          1
+        ]
+      },
+      "endDate": null
+    },
+    {
+      "id": "0c8531f2-e9fb-47e0-a93a-11fc2e858718",
+      "title": "check stock market",
+      "assigneeId": "988b91ba-f738-450c-ac26-38d7ceeab84e",
+      "startDate": "2026-04-23",
+      "recurrence": {
+        "type": "weekly",
+        "days": [
+          1
+        ]
+      },
+      "endDate": null
+    }
+  ]
+}
