@@ -1,19 +1,19 @@
 import {
   addDays, addWeeks, addMonths, getDay, setDate,
-  isAfter, isBefore, isEqual, parseISO,
+  isAfter, isBefore, parseISO,
 } from 'date-fns';
+import type { Member, EnrichedChore, CalendarEvent } from '../types';
 import { getMemberColor } from './colors';
 
-function parseDate(str) {
-  // Parse YYYY-MM-DD in local time to avoid UTC offset shifting
+function parseDate(str: string): Date {
   return parseISO(str + (str.length === 10 ? 'T00:00:00' : ''));
 }
 
-function inRange(d, start, end) {
+function inRange(d: Date, start: Date, end: Date): boolean {
   return !isBefore(d, start) && !isAfter(d, end);
 }
 
-function makeEvent(chore, date, members) {
+function makeEvent(chore: EnrichedChore, date: Date, members: Member[]): CalendarEvent {
   const start = new Date(date);
   const end = new Date(date);
 
@@ -44,16 +44,21 @@ function makeEvent(chore, date, members) {
   };
 }
 
-export function expandChore(chore, rangeStart, rangeEnd, members) {
-  const events = [];
+export function expandChore(
+  chore: EnrichedChore,
+  rangeStart: Date,
+  rangeEnd: Date,
+  members: Member[]
+): CalendarEvent[] {
+  const events: CalendarEvent[] = [];
   const choreStart = parseDate(chore.startDate);
   const choreEnd = chore.endDate ? parseDate(chore.endDate) : null;
 
   const effectiveEnd = choreEnd && isBefore(choreEnd, rangeEnd) ? choreEnd : rangeEnd;
 
-  const { type } = chore.recurrence || {};
+  const { type } = chore.recurrence;
 
-  if (!type || type === 'none') {
+  if (type === 'none') {
     if (inRange(choreStart, rangeStart, rangeEnd)) {
       events.push(makeEvent(chore, choreStart, members));
     }
@@ -61,7 +66,7 @@ export function expandChore(chore, rangeStart, rangeEnd, members) {
   }
 
   if (type === 'weekly') {
-    const days = new Set(chore.recurrence.days || []);
+    const days = new Set(chore.recurrence.days);
     let d = isBefore(choreStart, rangeStart) ? new Date(rangeStart) : new Date(choreStart);
     d.setHours(0, 0, 0, 0);
     while (!isAfter(d, effectiveEnd)) {
@@ -74,10 +79,9 @@ export function expandChore(chore, rangeStart, rangeEnd, members) {
   }
 
   if (type === 'monthly') {
-    const dom = chore.recurrence.dayOfMonth || 1;
-    // Start from the month of choreStart (or rangeStart if later)
+    const dom = chore.recurrence.dayOfMonth;
     let base = new Date(isBefore(choreStart, rangeStart) ? rangeStart : choreStart);
-    base = setDate(base, 1); // first of that month
+    base = setDate(base, 1);
     base.setHours(0, 0, 0, 0);
     while (!isAfter(base, effectiveEnd)) {
       const occurrence = setDate(new Date(base), dom);
@@ -91,7 +95,7 @@ export function expandChore(chore, rangeStart, rangeEnd, members) {
   }
 
   if (type === 'custom') {
-    const { interval = 1, unit = 'weeks' } = chore.recurrence;
+    const { interval, unit } = chore.recurrence;
     let d = new Date(choreStart);
     d.setHours(0, 0, 0, 0);
     while (!isAfter(d, effectiveEnd)) {
@@ -106,6 +110,11 @@ export function expandChore(chore, rangeStart, rangeEnd, members) {
   return events;
 }
 
-export function expandAll(chores, rangeStart, rangeEnd, members) {
+export function expandAll(
+  chores: EnrichedChore[],
+  rangeStart: Date,
+  rangeEnd: Date,
+  members: Member[]
+): CalendarEvent[] {
   return chores.flatMap((c) => expandChore(c, rangeStart, rangeEnd, members));
 }

@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import type { SlotInfo, View } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay, addMonths, subMonths } from 'date-fns';
 import { enUS } from 'date-fns/locale';
+import type { Chore, Member, CalendarEvent, EnrichedChore } from '../../types';
 import { expandAll } from '../../utils/recurrence';
-import { getMemberColor } from '../../utils/colors';
 import ChoreEventChip from './ChoreEventChip';
 
 const localizer = dateFnsLocalizer({
@@ -14,12 +15,18 @@ const localizer = dateFnsLocalizer({
   locales: { 'en-US': enUS },
 });
 
-export default function ChoreCalendar({ chores, members, onSelectSlot, onSelectEvent }) {
-  const [view, setView] = useState('month');
+interface ChoreCalendarProps {
+  chores: Chore[];
+  members: Member[];
+  onSelectSlot: (slotInfo: SlotInfo) => void;
+  onSelectEvent: (event: CalendarEvent) => void;
+}
+
+export default function ChoreCalendar({ chores, members, onSelectSlot, onSelectEvent }: ChoreCalendarProps) {
+  const [view, setView] = useState<View>('month');
   const [date, setDate] = useState(new Date());
 
-  // Enrich chores with assignee name for chip display
-  const enriched = useMemo(() =>
+  const enriched = useMemo<EnrichedChore[]>(() =>
     chores.map((c) => ({
       ...c,
       assigneeName: c.assigneeId
@@ -38,7 +45,7 @@ export default function ChoreCalendar({ chores, members, onSelectSlot, onSelectE
     [enriched, members, date]
   );
 
-  function eventPropGetter(event) {
+  function eventPropGetter(event: CalendarEvent): { style: React.CSSProperties } {
     return {
       style: {
         backgroundColor: event.resource.color,
@@ -50,7 +57,7 @@ export default function ChoreCalendar({ chores, members, onSelectSlot, onSelectE
   }
 
   return (
-    <Calendar
+    <Calendar<CalendarEvent>
       localizer={localizer}
       events={events}
       view={view}
