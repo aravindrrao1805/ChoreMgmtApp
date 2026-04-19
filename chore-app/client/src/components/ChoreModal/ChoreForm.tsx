@@ -20,11 +20,13 @@ function defaultEndTime(startTime: string): string {
   return `${String(endH < 24 ? endH : 23).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
 
+const UNASSIGNED = '__unassigned__';
+
 function defaultState(chore: Chore | null, prefillDate: string, prefillTime: string): ChoreFormState {
   if (chore) {
     return {
       title: chore.title,
-      assigneeId: chore.assigneeId ?? '',
+      assigneeId: chore.assigneeId ?? UNASSIGNED,
       startDate: chore.startDate,
       startTime: chore.startTime ?? '',
       endTime: chore.endTime ?? '',
@@ -34,7 +36,7 @@ function defaultState(chore: Chore | null, prefillDate: string, prefillTime: str
   }
   return {
     title: '',
-    assigneeId: '',
+    assigneeId: UNASSIGNED,
     startDate: prefillDate,
     startTime: prefillTime,
     endTime: defaultEndTime(prefillTime),
@@ -65,7 +67,7 @@ export default function ChoreForm({ chore, prefillDate, prefillTime, members, on
     if (!form.title.trim() || !form.startDate) return;
     void onSubmit({
       title: form.title.trim(),
-      assigneeId: form.assigneeId || null,
+      assigneeId: form.assigneeId === UNASSIGNED ? null : form.assigneeId,
       startDate: form.startDate,
       startTime: form.startTime || null,
       endTime: form.endTime || null,
@@ -116,7 +118,7 @@ export default function ChoreForm({ chore, prefillDate, prefillTime, members, on
             <SelectValue placeholder="Unassigned" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Unassigned</SelectItem>
+            <SelectItem value={UNASSIGNED}>Unassigned</SelectItem>
             {members.map((m) => (
               <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
             ))}
