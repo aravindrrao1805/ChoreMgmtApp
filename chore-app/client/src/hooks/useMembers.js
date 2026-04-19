@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getMembers, postMember, deleteMember } from '../utils/api';
+import { useServerEvents } from './useServerEvents';
 
 export function useMembers() {
   const [members, setMembers] = useState([]);
@@ -10,6 +11,7 @@ export function useMembers() {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+  useServerEvents(load);
 
   const addMember = useCallback(async (name) => {
     await postMember(name);

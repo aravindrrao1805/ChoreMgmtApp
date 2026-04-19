@@ -7,6 +7,25 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// SSE client registry
+const sseClients = new Set();
+
+function broadcast(event, data) {
+  const payload = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
+  for (const res of sseClients) {
+    res.write(payload);
+  }
+}
+
+app.get('/api/events', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+  sseClients.add(res);
+  req.on('close', () => sseClients.delete(res));
+});
+
 // Members
 app.get('/api/members', (req, res) => {
   const db = read();
@@ -20,6 +39,7 @@ app.post('/api/members', (req, res) => {
   const member = { id: uuidv4(), name: name.trim() };
   db.members.push(member);
   write(db);
+  broadcast('refresh', {});
   res.status(201).json(member);
 });
 
@@ -31,6 +51,7 @@ app.delete('/api/members/:id', (req, res) => {
     c.assigneeId === req.params.id ? { ...c, assigneeId: null } : c
   );
   write(db);
+  broadcast('refresh', {});
   res.json({ ok: true });
 });
 
@@ -56,6 +77,7 @@ app.post('/api/chores', (req, res) => {
   };
   db.chores.push(chore);
   write(db);
+  broadcast('refresh', {});
   res.status(201).json(chore);
 });
 
@@ -65,6 +87,7 @@ app.put('/api/chores/:id', (req, res) => {
   if (idx === -1) return res.status(404).json({ error: 'Not found' });
   db.chores[idx] = { ...db.chores[idx], ...req.body, id: req.params.id };
   write(db);
+  broadcast('refresh', {});
   res.json(db.chores[idx]);
 });
 
@@ -72,6 +95,7 @@ app.delete('/api/chores/:id', (req, res) => {
   const db = read();
   db.chores = db.chores.filter(c => c.id !== req.params.id);
   write(db);
+  broadcast('refresh', {});
   res.json({ ok: true });
 });
 

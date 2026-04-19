@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getChores, postChore, putChore, deleteChore } from '../utils/api';
+import { useServerEvents } from './useServerEvents';
 
 export function useChores() {
   const [chores, setChores] = useState([]);
@@ -10,6 +11,7 @@ export function useChores() {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+  useServerEvents(load);
 
   const addChore = useCallback(async (chore) => {
     await postChore(chore);
