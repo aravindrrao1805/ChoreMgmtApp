@@ -7,6 +7,10 @@
     {
       "id": "e75d795e-fe9a-4f89-9db0-099d8a46e90e",
       "name": "Char 2"
+    },
+    {
+      "id": "89785cd9-fbd2-4b19-8cf6-4ff4f0cfed6f",
+      "name": "Char 3"
     }
   ],
   "chores": [
@@ -45,6 +49,145 @@
         "type": "weekly",
         "days": [
           1
+        ]
+      },
+      "endDate": null
+    },
+    {
+      "id": "235b54aa-b227-49ac-b056-dd0a5b379ef9",
+      "title": "Check water filter",
+      "assigneeId": "e75d795e-fe9a-4f89-9db0-099d8a46e90e",
+      "startDate": "2026-04-21",
+      "recurrence": {
+        "type": "weekly",
+        "days": [
+          2
+        ]
+      },
+      "endDate": null
+    },
+    {
+      "id": "60ac0248-b525-4481-9544-4738e8e3cead",
+      "title": "feed fish",
+      "assigneeId": "89785cd9-fbd2-4b19-8cf6-4ff4f0cfed6f",
+      "startDate": "2026-04-23",
+      "recurrence": {
+        "type": "weekly",
+        "days": [
+          4
+        ]
+      },
+      "endDate": null
+    },
+    {
+      "id": "7028b58c-22bf-44f4-8f97-7b4d7bb52b84",
+      "title": "Check water",
+      "assigneeId": "988b91ba-f738-450c-ac26-38d7ceeab84e",
+      "startDate": "2026-04-22",
+      "recurrence": {
+        "type": "weekly",
+        "days": [
+          3
+        ]
+      },
+      "endDate": null
+    },
+    {
+      "id": "9536160f-ca54-4a18-9165-db6fb08341de",
+      "title": "Check water",
+      "assigneeId": "988b91ba-f738-450c-ac26-38d7ceeab84e",
+      "startDate": "2026-04-22",
+      "recurrence": {
+        "type": "weekly",
+        "days": [
+          3
+        ]
+      },
+      "endDate": null
+    },
+    {
+      "id": "c3e4076f-a6af-4e19-8b02-d4c8c352aa38",
+      "title": "take the dog for a walk",
+      "assigneeId": "89785cd9-fbd2-4b19-8cf6-4ff4f0cfed6f",
+      "startDate": "2026-04-23",
+      "recurrence": {
+        "type": "weekly",
+        "days": [
+          4
+        ]
+      },
+      "endDate": null
+    },
+    {
+      "id": "a18bf35c-ac1d-4dd1-bd6e-e43b8d91ed1a",
+      "title": "check water again",
+      "assigneeId": "988b91ba-f738-450c-ac26-38d7ceeab84e",
+      "startDate": "2026-04-22",
+      "recurrence": {
+        "type": "weekly",
+        "days": [
+          3
+        ]
+      },
+      "endDate": null
+    },
+    {
+      "id": "085fd939-d186-45bd-b807-2e2f68708edf",
+      "title": "New task 1",
+      "assigneeId": "988b91ba-f738-450c-ac26-38d7ceeab84e",
+      "startDate": "2026-04-23",
+      "startTime": null,
+      "endTime": null,
+      "recurrence": {
+        "type": "weekly",
+        "days": [
+          3,
+          4
+        ]
+      },
+      "endDate": null
+    },
+    {
+      "id": "0a825b30-8441-49e8-9e7e-06613faa791d",
+      "title": "new task 2",
+      "assigneeId": "988b91ba-f738-450c-ac26-38d7ceeab84e",
+      "startDate": "2026-04-23",
+      "startTime": "10:00",
+      "endTime": "11:00",
+      "recurrence": {
+        "type": "weekly",
+        "days": [
+          4
+        ]
+      },
+      "endDate": null
+    },
+    {
+      "id": "eace3d79-02f6-47cc-b6ee-504d65a88900",
+      "title": "new task 3",
+      "assigneeId": "e75d795e-fe9a-4f89-9db0-099d8a46e90e",
+      "startDate": "2026-04-22",
+      "startTime": "10:30",
+      "endTime": "11:30",
+      "recurrence": {
+        "type": "weekly",
+        "days": [
+          3
+        ]
+      },
+      "endDate": null
+    },
+    {
+      "id": "7460e771-f7f7-44ba-9c46-3bf09e50f4b2",
+      "title": "test task 1",
+      "assigneeId": "e75d795e-fe9a-4f89-9db0-099d8a46e90e",
+      "startDate": "2026-04-21",
+      "startTime": "12:00",
+      "endTime": "13:00",
+      "recurrence": {
+        "type": "weekly",
+        "days": [
+          2
         ]
       },
       "endDate": null
